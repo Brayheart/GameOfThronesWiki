@@ -16,7 +16,9 @@ fetch('https://www.anapioficeandfire.com/api')
 
 var apiCall = function(event){
   var text = event.target.textContent
-  fetch("https://www.anapioficeandfire.com/api/" + text)
+  var url = "https://www.anapioficeandfire.com/api/" + text + "?page=1&pageSize=1000"
+  console.log(url)
+  fetch(url)
     .then(response => response.json())
     .then(data => {
       console.log(data)
