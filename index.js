@@ -15,35 +15,60 @@ fetch('https://www.anapioficeandfire.com/api')
   });
 
 var apiCall = function(event){
+  container.innerHTML = ''
   var text = event.target.textContent
-  var url = "https://www.anapioficeandfire.com/api/" + text + "?page=1&pageSize=1000"
-  console.log(url)
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      if(data[0].url.includes('books')){
-        Books(data)
-      } else if(data[0].url.includes('characters')){
-        console.log('characters')
-      } else if(data[0].url.includes('houses')){
-        console.log('houses')
-      }
+  if(text === 'characters'){
+    Characters()
+  } else {
+
+    var url = "https://www.anapioficeandfire.com/api/" + text + "?page=1&pageSize=1000"
+    console.log(url)
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if(data[0].url.includes('books')){
+          Books(data)
+        } else if(data[0].url.includes('houses')){
+          console.log('houses')
+        }
+      })
+  }
+
+}
+
+function Characters(){
+  fetch('https://thronesapi.com/api/v2/Characters')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+    data.forEach(el => {
+      var div = document.createElement('div')
+      div.setAttribute('class','col')
+      div.innerHTML = `<div class="card" style="width: 18rem;">
+      <img src="${el.imageUrl}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">${el.fullName}</h5>
+        <p class="card-text">Title: ${el.title}</p>
+        <p class="card-text">House: ${el.family}</p>
+      </div>
+    </div>`
+    container.appendChild(div)
     })
+  })
 }
 
 function Books(data) {
-  container.innerHTML = ''
     data.forEach(el => {
     var div = document.createElement('div')
     div.setAttribute('class','col')
     div.innerHTML = `<div class="card" style="width: 18rem">
         <div class="card-body">
           <h5 class="card-title">${el.name}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">${el.publisher}</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="card-link">Card link</a>
-          <a href="#" class="card-link">Another link</a>
+          <h6 class="card-subtitle mb-2 text-muted">Publisher: ${el.publisher}</h6>
+          <p class="card-text">Number of pages: ${el.numberOfPages}</p>
+          <p class="card-text">Number of Characters: ${el.characters.length}</p>
+          <p class="card-text">Released: ${el.released}</p>
         </div>
       </div>`
     container.appendChild(div)
