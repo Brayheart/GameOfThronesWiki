@@ -17,48 +17,55 @@ fetch('https://www.anapioficeandfire.com/api')
 var apiCall = function(event){
   container.innerHTML = ''
   var text = event.target.textContent
-  if(text === 'characters'){
-    Characters()
-  } else {
-
-    var url = "https://www.anapioficeandfire.com/api/" + text + "?page=1&pageSize=1000"
-    console.log(url)
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        if(data[0].url.includes('books')){
-          Books(data)
-        } else if(data[0].url.includes('houses')){
-          console.log('houses')
-        }
-      })
-  }
-
+  console.log(text)
+  var url = "https://www.anapioficeandfire.com/api/" + text + "?page=1&pageSize=1000"
+  console.log(url)
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      if(data[0].url.includes('books')){
+        Books(data)
+      } else if(data[0].url.includes('characters')){
+        Characters(data)
+      } else if(data[0].url.includes('houses')){
+        Houses(data)
+      }
+    })
 }
 
-function Characters(){
-  fetch('https://thronesapi.com/api/v2/Characters')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data)
-    data.forEach(el => {
-      var div = document.createElement('div')
-      div.setAttribute('class','col')
-      div.innerHTML = `<div class="card" style="width: 18rem;">
-      <img src="${el.imageUrl}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">${el.fullName}</h5>
-        <p class="card-text">Title: ${el.title}</p>
-        <p class="card-text">House: ${el.family}</p>
-      </div>
-    </div>`
+function Houses(data){
+  data.forEach(el => {
+    var div = document.createElement('div')
+    div.setAttribute('class','col')
+    div.innerHTML = `<div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h6 class="card-title">${el.name}</h6>
+        </div>
+      </div>`
     container.appendChild(div)
-    })
   })
 }
 
+function Characters(data){
+
+  var characters = data.filter(el => el.name != '')
+  console.log(characters)
+
+    characters.forEach(el => {
+    var div = document.createElement('div')
+    div.setAttribute('class','col')
+    div.innerHTML = `<div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h5 class="card-title">${el.name}</h5>
+        </div>
+      </div>`
+    container.appendChild(div)
+    })
+}
+
 function Books(data) {
+
     data.forEach(el => {
     var div = document.createElement('div')
     div.setAttribute('class','col')
