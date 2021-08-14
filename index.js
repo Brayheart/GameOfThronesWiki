@@ -1,23 +1,16 @@
 var container = document.querySelector('#row')
 
-fetch('https://www.anapioficeandfire.com/api')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data)
-    const propertyNames = Object.keys(data);
-    propertyNames.forEach(el => {
-      var button = document.createElement('button')
-      button.setAttribute('class','col')
-      button.textContent = el
-      button.addEventListener('click', apiCall)
-      container.appendChild(button)
-    })
-  });
 
-var apiCall = function(event){
+var nav = document.querySelector('#myTab')
+nav.addEventListener('click', apiCall)
+
+
+function apiCall(event){
   container.innerHTML = ''
   var text = event.target.textContent
-  console.log(text)
+  if(text === 'Home'){
+    return
+  }
   var url = "https://www.anapioficeandfire.com/api/" + text + "?page=1&pageSize=1000"
   console.log(url)
   fetch(url)
@@ -30,6 +23,8 @@ var apiCall = function(event){
         Characters(data)
       } else if(data[0].url.includes('houses')){
         Houses(data)
+      } else {
+        console.log("here")
       }
     })
 }
